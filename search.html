@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Details</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+        .details {
+            flex: 1 1 20%;
+            background-color: #e0f7fa;
+            border: 1px solid #0288d1;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            box-sizing: border-box;
+        }
+        .details-header {
+            background-color: #0288d1;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .details-content {
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 0 0 5px 5px;
+        }
+        .heading{
+            text-align: center;
+        }
+        .details-content p {
+            margin: 5px 0;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination li {
+            display: inline;
+            margin: 0 5px;
+        }
+        .pagination a {
+            text-decoration: none;
+            color: #0288d1;
+            padding: 5px 10px;
+            border: 1px solid #0288d1;
+            border-radius: 5px;
+        }
+        .pagination a.disabled {
+            color: #ccc;
+            border: 1px solid #ccc;
+        }
+        .pagination a.active {
+            background-color: #0288d1;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+ 
+    {% if datas=='invalid' %}
+    <h2 class="heading">No results found</h2>
+    {% else %}
+
+    <h3 class="heading" >SEARCH BY {{category|upper}}</h3>
+    <div class="container">
+    {% for city_data in search_data %}
+
+    <div class="details">
+        <div class="details-header">Estate Details</div>
+        <div class="details-content">
+            <p><strong>Status:</strong> {{ city_data[2] }}</p>
+            <p><strong>Price:</strong> {{ city_data[3] }}</p>
+            <p><strong>City:</strong> {{ city_data[8] }}</p>
+            <p><strong>State:</strong> {{ city_data[9] }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+
+<div class="pagination">
+    {% if page > 1 %}
+    <li><a href="{{ url_for('search', page=page-1, category=category, query=query) }}">Previous</a></li>
+    {% else %}
+    <li><a class="disabled">Previous</a></li>
+    {% endif %}
+
+    {% if page > 3 %}
+    <li><a href="{{ url_for('search', page=1, category=category, query=query) }}">1</a></li>
+    {% if page > 4 %}
+    <li><a class="disabled">...</a></li>
+    {% endif %}
+    {% endif %}
+
+    {% for p in range(p_start, p_end+1) %}
+    <li><a href="{{ url_for('search', page=p, category=category, query=query) }}"
+            class="{{ 'active' if p == page else '' }}">{{ p }}</a></li>
+    {% endfor %}
+
+    {% if page < total_pages - 2 %}
+    {% if page < total_pages - 3 %}
+    <li><a class="disabled">...</a></li>
+    {% endif %}
+    <li><a href="{{ url_for('search', page=total_pages, category=category, query=query) }}">{{ total_pages }}</a></li>
+    {% endif %}
+
+    {% if page < total_pages %}
+    <li><a href="{{ url_for('search', page=page+1, category=category, query=query) }}">Next</a></li>
+    {% else %}
+    <li><a class="disabled">Next</a></li>
+    {% endif %}
+</div>
+</body>
+</html>
